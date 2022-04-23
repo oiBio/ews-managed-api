@@ -122,7 +122,14 @@ namespace Microsoft.Exchange.WebServices.Data
             if (this.token != null)
             {
                 request.Headers.Remove(HttpRequestHeader.Authorization.ToString());
-                request.Headers.Authorization = new AuthenticationHeaderValue(this.token);
+
+                var token = this.token;
+                if (this.token.StartsWith(BearerAuthenticationType))
+                {
+                    token = token.Substring(BearerAuthenticationType.Length + 1);
+                }
+
+                request.Headers.Authorization = new AuthenticationHeaderValue(BearerAuthenticationType, token);
             }
             else
             {
